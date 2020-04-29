@@ -36,7 +36,7 @@ def get_fcc_records(name):
     return pd.DataFrame(data)
 
 if __name__ == '__main__':
-    df = load_data(r'c:\Python\boradband\active_filtered_sp_499.xls')
+    df = load_data(r'c:\Python\boradband\active_filtered_sp_499.csv')
 
     name_fields = ['Legal_Name_of_Carrier', 'Doing_Business_As', 'Holding_Company', 'Management_Company'] + ['Other_Trade_Name{}'.format(n) for n in range(1, 14)]
 
