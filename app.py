@@ -2,6 +2,7 @@ import pandas as pd
 from fuzzywuzzy import fuzz
 import streamlit as st
 from process_fcc_data import *
+import re
 
 # 499 form search
 # https://apps.fcc.gov/cgb/form499/499a.cfm
@@ -24,7 +25,7 @@ def prepare_file():
 
 @st.cache
 def load_data(filename):
-    return pd.read_excel(filename)
+    return pd.read_csv(filename)
 
 def get_fcc_records(name):
     page = get_license_page(name)
@@ -35,7 +36,7 @@ def get_fcc_records(name):
     return pd.DataFrame(data)
 
 if __name__ == '__main__':
-    df = load_data(r'active_filtered_sp_499.xls')
+    df = load_data(r'c:\Python\boradband\active_filtered_sp_499.xls')
 
     name_fields = ['Legal_Name_of_Carrier', 'Doing_Business_As', 'Holding_Company', 'Management_Company'] + ['Other_Trade_Name{}'.format(n) for n in range(1, 14)]
 
@@ -45,12 +46,21 @@ if __name__ == '__main__':
     display_fields_defaults = ['Legal_Name_of_Carrier', 'Doing_Business_As', 'Principal_Comm_Type_1', 'HQ_State', 'Holding_Company']
     display_fields = st.sidebar.multiselect('Display fields', df.columns.to_list(), display_fields_defaults)
 
+    enhanced_search = st.sidebar.checkbox('Enable enhanced FCC search')
+
     st.title('Search results')
     if name:
         results_df = search_sp(df, name, name_fields, score_th)
         st.dataframe(results_df[display_fields])
         sp_names = results_df['Legal_Name_of_Carrier'].to_list()
         for name in sp_names:
-            st.subheader(name)
-            st.dataframe(get_fcc_records(name).T)
+            name_ = re.sub(r'[\.\,]', '', name)
+            name_ = re.sub(r'\s&\s', '&', name_)
+            st.subheader(name_)
+            st.dataframe(get_fcc_records(name_).T)
+            if enhanced_search:
+                if len(name_.split(' ')) > 1:
+                    name_ = name_.split(' ')[0]
+                    st.subheader(name_)
+                    st.dataframe(get_fcc_records(name_).T)
 
