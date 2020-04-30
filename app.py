@@ -23,7 +23,7 @@ def prepare_file():
     fcc499_df.reset_index(inplace=True)
     fcc499_df.to_excel('active_filtered_sp_499.xls')
 
-@st.cache
+@st.cache(allow_output_mutation=True)
 def load_data():
     filename = r'active_filtered_sp_499.csv'
     return pd.read_csv(filename, engine='python')
