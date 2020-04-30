@@ -24,7 +24,8 @@ def prepare_file():
     fcc499_df.to_excel('active_filtered_sp_499.xls')
 
 @st.cache
-def load_data(filename):
+def load_data():
+    filename = r'active_filtered_sp_499.csv'
     return pd.read_csv(filename, engine='python')
 
 def get_fcc_records(name):
@@ -36,7 +37,7 @@ def get_fcc_records(name):
     return pd.DataFrame(data)
 
 if __name__ == '__main__':
-    df = load_data(r'active_filtered_sp_499.csv')
+    df = load_data()
 
     name_fields = ['Legal_Name_of_Carrier', 'Doing_Business_As', 'Holding_Company', 'Management_Company'] + ['Other_Trade_Name{}'.format(n) for n in range(1, 14)]
 
