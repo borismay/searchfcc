@@ -25,7 +25,7 @@ def prepare_file():
 
 @st.cache
 def load_data(filename):
-    return pd.read_csv(filename)
+    return pd.read_csv(filename, engine='python')
 
 def get_fcc_records(name):
     page = get_license_page(name)
