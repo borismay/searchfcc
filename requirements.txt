@@ -1,4 +1,4 @@
-mechanize==0.4.5
+mechanize==0.4.6
 fuzzywuzzy==0.18.0
 requests==2.22.0
 streamlit==0.56.0
